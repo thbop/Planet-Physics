@@ -3,6 +3,8 @@ from pygame.math import Vector2 as vec2
 import json
 
 from body import Bodies
+from camera import Camera
+from gui import Gui
 
 pygame.init()
 
@@ -13,6 +15,9 @@ class Game:
         pygame.display.set_caption('Planet Physics')
 
         self.line_surf = pygame.Surface(self.size)
+
+        self.camera = Camera(self.size)
+        self.gui = Gui(self)
 
         self.bodies = Bodies(self)
 
@@ -26,19 +31,21 @@ class Game:
 
     
     def click(self):
-        
         if pygame.mouse.get_pressed()[0]:
             mx, my = pygame.mouse.get_pos()
             if not self.sel['sel']:
                 self.sel['sel'] = True
                 
-                self.sel['pos'] = vec2(mx, my)
+                self.sel['pos'] = vec2(mx + self.camera.rect.x, my + self.camera.rect.y)
             else:
                 self.sel['vel'] = vec2(
-                    (mx - self.sel['pos'].x) / 50,
-                    (my - self.sel['pos'].y) / 50
+                    (mx + self.camera.rect.x - self.sel['pos'].x) / 50,
+                    (my + self.camera.rect.y - self.sel['pos'].y) / 50
                     )
-            pygame.draw.line(self.screen, (100, 100, 100), self.sel['pos'], (mx, my), 3)    
+            pygame.draw.line(self.screen, (100, 100, 100),
+                             [self.sel['pos'].x - self.camera.rect.x, self.sel['pos'].y - self.camera.rect.y],
+                             (mx, my),
+                             3)    
 
         elif self.sel['sel']:
             self.bodies.add( self.sel['pos'], self.sel['vel'], 10, 100 )
@@ -70,14 +77,17 @@ class Game:
 
             self.screen.fill((0, 0, 0))
 
-            self.screen.blit(self.line_surf, (0, 0))
+            # self.screen.blit(self.line_surf, (0, 0))
 
-            self.line_surf.fill((1, 1, 1), special_flags=pygame.BLEND_SUB)
+            # self.line_surf.fill((1, 1, 1), special_flags=pygame.BLEND_SUB)
 
 
             self.click()
+            self.camera.move()
 
             self.bodies.run()
+
+            self.gui.run()
 
             clock.tick(60)
             pygame.display.flip()

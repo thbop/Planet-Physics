@@ -4,6 +4,7 @@ from pygame.math import Vector2 as vec2
 from random import randint
 
 
+
 class Body:
     def __init__(self, pos, vel, radius, mass):
         self.pos = pos
@@ -74,12 +75,16 @@ class Bodies:
                         # Remove b2
                         self.bodies.remove( b2 )
 
-
-                    
-
+            # Update position
             b.pos += b.vel
 
-            pygame.draw.circle(self.gm.screen, b.color, b.pos, b.radius, 0)
 
+            # Draw
+            pygame.draw.circle(self.gm.screen, b.color, [b.pos.x - self.gm.camera.rect.x, b.pos.y - self.gm.camera.rect.y], b.radius, 0)
+
+            # Draw trail
             fade = 50
-            pygame.draw.circle(self.gm.line_surf, (b.color[0] - fade, b.color[1] - fade, b.color[2] - fade ), b.pos, 2, 0)
+            pygame.draw.circle(self.gm.line_surf,
+                               (b.color[0] - fade, b.color[1] - fade, b.color[2] - fade ), # Fade color
+                               [b.pos.x - self.gm.camera.rect.x, b.pos.y - self.gm.camera.rect.y], # Adjust for camera
+                               2, 0)

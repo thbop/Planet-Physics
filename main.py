@@ -2,7 +2,7 @@ from pyray import *
 from vec2 import vec2
 import json
 
-from body import Bodies
+from body import *
 
 
 class Game:
@@ -13,7 +13,6 @@ class Game:
 
         set_target_fps(60)
 
-        self.line_surf = load_render_texture(self.size[0], self.size[1])
 
         self.camera = Camera2D(
             Vector2(self.size[0] / 2, self.size[1] / 2),
@@ -25,7 +24,7 @@ class Game:
 
         self.bodies = Bodies(self)
 
-        self.load('solar_system.json')
+        self.load('thbop_sys.json')
 
         self.sel = {
             'sel': False,
@@ -62,7 +61,7 @@ class Game:
             )
 
         elif self.sel['sel']:
-            self.bodies.add( self.sel['pos'], self.sel['vel'], 10, 100 )
+            self.bodies.add( Body(self.sel['pos'], self.sel['vel'], 10, 100 ) )
             self.sel = {
                 'sel': False,
                 'pos': vec2(0, 0),
@@ -75,15 +74,26 @@ class Game:
         data = json.load(file)
         file.close()
 
-        for b in data['bodies']:
-            self.bodies.add( vec2(b['pos'][0], b['pos'][1]), vec2(b['vel'][0], b['vel'][1]), b['radius'], b['mass'] )
+        for s in data['bodies']['stars']:
+            star = Star(vec2(s['pos'][0], s['pos'][1]), vec2(s['vel'][0], s['vel'][1]), s['radius'], s['mass'])
+
+            star.color = Color(s['color'][0], s['color'][1], s['color'][2], 255)
+            star.flair_color = Color(s['flair-color'][0], s['flair-color'][1], s['flair-color'][2], 255)
+            star.flair_amount = s['flair-amount']
+            star.flair_range = s['flair-range']
+
+            star.generate_flairs()
+
+            self.bodies.add( star )
+        for p in data['bodies']['planets']:
+            self.bodies.add( Planet(vec2(p['pos'][0], p['pos'][1]), vec2(p['vel'][0], p['vel'][1]), p['radius'], p['mass']) )
     
     def move_camera(self):
-        # Set some constants
-        move_acc = 1
+        # Set some values
+        move_acc = 1 / self.camera.zoom
         zoom_acc = .001
 
-        move_cap = 4
+        move_cap = 4 / self.camera.zoom
 
         # Panning
         if is_key_down(KeyboardKey.KEY_D): self.camera_vel.x += move_acc
@@ -138,15 +148,15 @@ class Game:
 
             self.click()
 
+            begin_blend_mode(BlendMode.BLEND_ADDITIVE)
             self.bodies.run()
+            end_blend_mode()
 
-            draw_texture(self.line_surf.texture, 0, 0, WHITE)
             end_mode_2d()
             
             end_drawing()
     
     def unload(self):
-        unload_render_texture(self.line_surf)
         close_window()
 
 

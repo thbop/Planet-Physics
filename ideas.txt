@@ -3,3 +3,8 @@ Port to raylib -
 Maybe add grid lines
 
 Improve graphics
+    -
+
+Add spaceship
+
+Black holes

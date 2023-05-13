@@ -13,6 +13,7 @@ class Body:
         self.radius = radius
         self.mass = mass
 
+    def _generate_color(self):
         self.color = Color(
             randint(150, 255), randint(150, 255), randint(150, 255), 255
         )
@@ -24,6 +25,40 @@ class Body:
         else:
             return False
     
+    def render(self):
+        draw_circle_v(self.pos.toray(), self.radius, self.color)
+
+class Planet(Body):
+    def __init__(self, pos, vel, radius, mass):
+        super().__init__(pos, vel, radius, mass)
+        self._generate_color()
+
+
+class Star(Body):
+    def __init__(self, pos, vel, radius, mass):
+        super().__init__(pos, vel, radius, mass)
+
+        self.flair_color = Color(5, 5, 5, 255)
+        self.flair_amount = 250
+        self.flair_range = 30
+
+        self.flairs = []
+    
+    def generate_flairs(self):
+        for i in range(self.flair_amount):
+            self.flairs.append(
+                Vector3(
+                    randint(-self.flair_range, self.flair_range),
+                    randint(-self.flair_range, self.flair_range),
+                    randint(self.radius - self.flair_range, self.radius + self.flair_range)
+                )
+            )
+    
+    def render(self):
+        draw_circle_v(self.pos.toray(), self.radius, Color(200, 200, 200, 255))
+        for f in self.flairs:
+            draw_circle_gradient(int(f.x + self.pos.x), int(f.y + self.pos.y), int(f.z), self.flair_color, Color(0, 0, 0, 255))
+    
 
 
 class Bodies:
@@ -34,8 +69,9 @@ class Bodies:
 
         self.g = .01
     
-    def add(self, pos, vel, radius, mass):
-        self.bodies.append( Body(pos, vel, radius, mass) )
+    def add(self, body):
+        self.bodies.append( body )
+    
     
     def run(self):
         for b in self.bodies:
@@ -80,5 +116,5 @@ class Bodies:
 
 
             # Draw
-            draw_circle_v(b.pos.toray(), b.radius, b.color)
+            b.render()
 

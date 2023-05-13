@@ -1,0 +1,36 @@
+{
+    "bodies":{
+        "stars":[
+            {
+                "pos": [800, 400],
+                "vel": [0, 0.005],
+                "radius": 40,
+                "mass": 100000,
+
+                "color": [200, 200, 200],
+                "flair-color": [20, 16, 3],
+                "flair-amount": 100,
+                "flair-range": 40
+            },
+            {
+                "pos": [10000, 3000],
+                "vel": [0, 0],
+                "radius": 30,
+                "mass": 50000,
+
+                "color": [200, 200, 200],
+                "flair-color": [20, 10, 20],
+                "flair-amount": 100,
+                "flair-range": 50
+            }
+        ],
+        "planets":[
+            {
+                "pos": [500, 400],
+                "vel": [0, -2],
+                "radius": 5,
+                "mass": 1000
+            }
+        ]
+    }
+}

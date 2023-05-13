@@ -1,5 +1,6 @@
 import pygame
 from pygame.math import Vector2 as vec2
+import json
 
 from body import Bodies
 
@@ -7,7 +8,7 @@ pygame.init()
 
 class Game:
     def __init__(self):
-        self.size = (1200, 800)
+        self.size = (1600, 900)
         self.screen = pygame.display.set_mode(self.size)
         pygame.display.set_caption('Planet Physics')
 
@@ -15,9 +16,7 @@ class Game:
 
         self.bodies = Bodies(self)
 
-        # self.bodies.add( vec2(100, 100), vec2(0, 0), 10, 100 )
-        # self.bodies.add( vec2(600, 100), vec2(0, 0), 10, 100 )
-        # self.bodies.add( vec2(350, 600), vec2(-.2, 0), 10, 100 )
+        self.load('solar_system.json')
 
         self.sel = {
             'sel': False,
@@ -49,7 +48,14 @@ class Game:
                 'vel': vec2(0, 0)
             }
         
-            
+    
+    def load(self, filename):
+        file = open(filename)
+        data = json.load(file)
+        file.close()
+
+        for b in data['bodies']:
+            self.bodies.add( vec2(b['pos'][0], b['pos'][1]), vec2(b['vel'][0], b['vel'][1]), b['radius'], b['mass'] )
     
 
     def run(self):

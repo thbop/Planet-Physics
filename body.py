@@ -31,7 +31,7 @@ class Bodies:
 
         self.bodies = []
 
-        self.g = 1
+        self.g = .01
     
     def add(self, pos, vel, radius, mass):
         self.bodies.append( Body(pos, vel, radius, mass) )

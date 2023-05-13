@@ -93,7 +93,7 @@ class Bodies:
                     b.vel += acc
 
                     # Check collision
-                    if b.collide(b2):
+                    if b.collide(b2) and not isinstance(b2, Star):
                         b.pos = vec2(
                             ( b.pos.x + b2.pos.x ) / 2,
                             ( b.pos.y + b2.pos.y ) / 2

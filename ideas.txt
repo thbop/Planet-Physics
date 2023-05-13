@@ -3,8 +3,20 @@ Port to raylib -
 Maybe add grid lines
 
 Improve graphics
-    -
+    Stars -
+    Add thrust particles
 
-Add spaceship
+Add spaceship -
+
 
 Black holes
+
+Make timestep configurable -
+
+Pre-program ship movements
+
+Ship stats on screen
+
+Make camera frame independent
+
+Fix combine

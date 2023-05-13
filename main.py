@@ -3,6 +3,7 @@ from vec2 import vec2
 import json
 
 from body import *
+from spaceship import Ship
 
 
 class Game:
@@ -11,7 +12,7 @@ class Game:
 
         init_window(self.size[0], self.size[1], 'Interplanetary Orbital Simulation')
 
-        set_target_fps(60)
+        
 
 
         self.camera = Camera2D(
@@ -24,13 +25,22 @@ class Game:
 
         self.bodies = Bodies(self)
 
+        self.ship = Ship(vec2(10, 10), vec2(0, 0))
+        self.bodies.add(self.ship)
+
         self.load('thbop_sys.json')
+
 
         self.sel = {
             'sel': False,
             'pos': vec2(0, 0),
             'vel': vec2(0, 0)
         }
+
+
+        self.fps = 60
+        self.ffps = self.fps
+        set_target_fps(self.fps)
 
     
     def click(self):
@@ -61,7 +71,7 @@ class Game:
             )
 
         elif self.sel['sel']:
-            self.bodies.add( Body(self.sel['pos'], self.sel['vel'], 10, 100 ) )
+            self.bodies.add( Planet(self.sel['pos'], self.sel['vel'], 10, 100 ) )
             self.sel = {
                 'sel': False,
                 'pos': vec2(0, 0),
@@ -131,24 +141,46 @@ class Game:
             self.camera.zoom = 7.0
             self.camera_vel.z = 0
     
+    def display_stats(self):
+        draw_text("Timestep: " + str(round(self.ffps)) + " : " + str(self.fps) + " : " + str(get_fps()), 10, 10, 20, GREEN)
+        draw_text(f'''Ship:
+    Position( {round(self.ship.pos.x, 1)}, {round(self.ship.pos.y, 1)} )
+    Velocity( {round(self.ship.vel.x, 1)}, {round(self.ship.vel.y, 1)} )
+        ''', 10, 40, 20, RED)
+    
+
+    def fps_controls(self):
+        if is_key_down(KeyboardKey.KEY_RIGHT): self.ffps += 5
+        elif is_key_down(KeyboardKey.KEY_LEFT): self.ffps -= 5
+
+        if is_key_pressed(KeyboardKey.KEY_DOWN):
+            self.fps = round(self.ffps)
+            set_target_fps(self.fps)
+        elif is_key_pressed(KeyboardKey.KEY_UP):
+            self.fps = 60
+            self.ffps = self.fps
+            set_target_fps(self.fps)
 
     def run(self):
         while not window_should_close():
-            
 
             self.move_camera()
 
+            self.fps_controls()
+
             begin_drawing()
-            begin_mode_2d(self.camera)
             clear_background(Color(0, 0, 0, 255))
 
-            # self.screen.blit(self.line_surf, (0, 0))
-            # self.line_surf.fill((1, 1, 1), special_flags=pygame.BLEND_SUB)
+            self.display_stats()
+
+            begin_mode_2d(self.camera)
+            
 
 
-            self.click()
+            # self.click()
 
             begin_blend_mode(BlendMode.BLEND_ADDITIVE)
+            self.ship.move()
             self.bodies.run()
             end_blend_mode()
 

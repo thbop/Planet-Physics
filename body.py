@@ -1,5 +1,5 @@
-import pygame
-from pygame.math import Vector2 as vec2
+from pyray import *
+from vec2 import vec2
 
 from random import randint
 
@@ -13,8 +13,8 @@ class Body:
         self.radius = radius
         self.mass = mass
 
-        self.color = (
-            randint(150, 255), randint(150, 255), randint(150, 255)
+        self.color = Color(
+            randint(150, 255), randint(150, 255), randint(150, 255), 255
         )
 
     
@@ -80,11 +80,5 @@ class Bodies:
 
 
             # Draw
-            pygame.draw.circle(self.gm.screen, b.color, [b.pos.x - self.gm.camera.rect.x, b.pos.y - self.gm.camera.rect.y], b.radius, 0)
+            draw_circle_v(b.pos.toray(), b.radius, b.color)
 
-            # Draw trail
-            fade = 50
-            pygame.draw.circle(self.gm.line_surf,
-                               (b.color[0] - fade, b.color[1] - fade, b.color[2] - fade ), # Fade color
-                               [b.pos.x - self.gm.camera.rect.x, b.pos.y - self.gm.camera.rect.y], # Adjust for camera
-                               2, 0)

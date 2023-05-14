@@ -12,8 +12,7 @@ class Game:
 
         init_window(self.size[0], self.size[1], 'Interplanetary Orbital Simulation')
 
-        
-
+        # hide_cursor()
 
         self.camera = Camera2D(
             Vector2(self.size[0] / 2, self.size[1] / 2),
@@ -101,7 +100,7 @@ class Game:
     def move_camera(self):
         # Set some values
         move_acc = 1 / self.camera.zoom
-        zoom_acc = .001
+        zoom_acc = .0003
 
         move_cap = 4 / self.camera.zoom
 
@@ -180,7 +179,9 @@ class Game:
             # self.click()
 
             begin_blend_mode(BlendMode.BLEND_ADDITIVE)
+            self.ship.run_p()
             self.ship.move()
+
             self.bodies.run()
             end_blend_mode()
 

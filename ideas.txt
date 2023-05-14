@@ -7,6 +7,7 @@ Improve graphics
     Add thrust particles
 
 Add spaceship -
+    Make num 5 the stablize button
 
 
 Black holes
@@ -15,7 +16,7 @@ Make timestep configurable -
 
 Pre-program ship movements
 
-Ship stats on screen
+Ship stats on screen -
 
 Make camera frame independent
 

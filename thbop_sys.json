@@ -8,20 +8,31 @@
                 "mass": 100000,
 
                 "color": [200, 200, 200],
-                "flair-color": [20, 16, 3],
+                "flair-color": [15, 13, 27],
                 "flair-amount": 100,
                 "flair-range": 40
             },
             {
                 "pos": [10000, 3000],
-                "vel": [0, -0.1],
+                "vel": [0, -0.2],
                 "radius": 30,
                 "mass": 40000,
 
                 "color": [200, 200, 200],
-                "flair-color": [20, 10, 20],
+                "flair-color": [40, 20, 40],
                 "flair-amount": 100,
-                "flair-range": 50
+                "flair-range": 40
+            },
+            {
+                "pos": [7000, 3000],
+                "vel": [0, 0.2],
+                "radius": 20,
+                "mass": 30000,
+
+                "color": [200, 200, 200],
+                "flair-color": [50, 20, 10],
+                "flair-amount": 100,
+                "flair-range": 20
             }
         ],
         "planets":[

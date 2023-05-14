@@ -9,6 +9,7 @@ class Body:
     def __init__(self, pos, vel, radius, mass):
         self.pos = pos
         self.vel = vel
+        self.acc = vec2(0, 0)
 
         self.radius = radius
         self.mass = mass
@@ -85,15 +86,17 @@ class Bodies:
                     dir_n = direction.normalize()
                     dir_m = direction.magnitude()
 
-                    acc = vec2(
+                    b.acc = vec2(
                         -( self.g * b2.mass * dir_n.x ) / dir_m**2,
                         -( self.g * b2.mass * dir_n.y ) / dir_m**2
                     )
 
-                    b.vel += acc
+                    b.vel += b.acc
 
                     # Check collision
-                    if b.collide(b2) and not isinstance(b2, Star):
+                    both_star = ( isinstance(b, Star) and isinstance(b2, Star) )
+                    b2_not_star = not isinstance(b2, Star)
+                    if b.collide(b2) and ( b2_not_star or both_star ):
                         b.pos = vec2(
                             ( b.pos.x + b2.pos.x ) / 2,
                             ( b.pos.y + b2.pos.y ) / 2
@@ -104,8 +107,18 @@ class Bodies:
                             ( b.mass * b.vel.y + b2.mass * b2.vel.y ) / ( b.mass + b2.mass )
                         )
 
-                        b.radius += b2.radius / 2
+                        b.radius += int(b2.radius / 2)
                         b.mass += b2.mass
+
+                        if both_star:
+                            b.flairs = []
+                            b.flair_amount += int(b2.flair_amount / 2)
+                            b.flair_range += int(b2.flair_range / 2)
+                            b.generate_flairs()
+
+                            b.flair_color.r = int((b.flair_color.r + b2.flair_color.r) / 2)
+                            b.flair_color.g = int((b.flair_color.g + b2.flair_color.g) / 2)
+                            b.flair_color.b = int((b.flair_color.b + b2.flair_color.b) / 2)
 
 
                         # Remove b2
